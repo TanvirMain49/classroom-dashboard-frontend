@@ -24,5 +24,29 @@ export const MOCK_SUBJECTS: Subject[] = [
         department: "English",
         description: "A course focused on critical reading and writing through the study of various literary genres.",
         createdAt: new Date().toISOString(),
+    },
+    {
+        id: 4,
+        code: "PHY301",
+        name: "Physics I",
+        department: "Physics",
+        description: "Comprehensive study of mechanics, thermodynamics, and waves.",
+        createdAt: new Date().toISOString(),
+    },
+    {
+        id: 5,
+        code: "HIST150",
+        name: "World History",
+        department: "History",
+        description: "Survey of major historical events and civilizations from ancient times to the modern era.",
+        createdAt: new Date().toISOString(),
+    },
+    {
+        id: 6,
+        code: "CHEM110",
+        name: "General Chemistry",
+        department: "Chemistry",
+        description: "Introduction to chemical principles, atomic structure, and chemical bonding.",
+        createdAt: new Date().toISOString(),
     }
 ];
