@@ -12,11 +12,13 @@ import { Toaster } from "./components/refine-ui/notification/toaster";
 import { useNotificationProvider } from "./components/refine-ui/notification/use-notification-provider";
 import { ThemeProvider } from "./components/refine-ui/theme/theme-provider";
 import Dashboard from "./pages/dashboard";
-import { BookOpen, Home } from "lucide-react";
+import { BookOpen, GraduationCap, Home } from "lucide-react";
 import { Layout } from "./components/refine-ui/layout/layout";
 import SubjectCreate from "./pages/subjects/create";
 import SubjectList from "./pages/subjects/list";
 import { dataProvider } from "./providers/data";
+import ClassList from "./pages/classes/list";
+import ClassCreate from "./pages/classes/create";
 
 function App() {
   return (
@@ -51,7 +53,15 @@ function App() {
                     label:'Subject',
                     icon: <BookOpen/>
                   }
-
+                },
+                {
+                  name:'classes',
+                  list:'/classes',
+                  create:'/classes/create',
+                  meta:{
+                    label:'Class',
+                    icon: <GraduationCap/>
+                  }
                 }
               ]}
             >
@@ -61,12 +71,15 @@ function App() {
                     <Outlet/>
                   </Layout>
                 }>
-                <Route path="/" element={ <Dashboard/> } />
-                <Route path="subjects">
-                  <Route index element={<SubjectList/>} />
-                  <Route path="create" element={<SubjectCreate/>}/>
-
-                </Route>
+                    <Route path="/" element={ <Dashboard/> } />
+                    <Route path="subjects">
+                      <Route index element={<SubjectList/>} />
+                      <Route path="create" element={<SubjectCreate/>}/>
+                    </Route>
+                    <Route path="classes">
+                      <Route index element={<ClassList/>} />
+                      <Route path="create" element={<ClassCreate/>} />
+                    </Route>
                 </Route>
               </Routes>
               <Toaster />
