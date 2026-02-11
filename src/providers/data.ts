@@ -1,75 +1,50 @@
-// import { createSimpleRestDataProvider } from "@refinedev/rest/simple-rest";
-// import { API_URL } from "./constants";
-// export const { dataProvider, kyInstance } = createSimpleRestDataProvider({
-//   apiURL: API_URL,
-// });
+import { BACKEND_BASE_URL } from '@/constants'
+import { ListResponse } from '@/types';
+import {createDataProvider, CreateDataProviderOptions} from '@refinedev/rest'
 
+const options: CreateDataProviderOptions = {
+  getList: {
+     getEndpoint: ({resource}) => {
+        // console.log("Resource: ", resource)
+        return resource 
+    },
 
+    buildQueryParams: async ({resource, pagination, filters}) =>{
+        const page = pagination?.currentPage ?? 1;
+        const pageSize = pagination?.pageSize ?? 10;
 
-// ================================================================
-// Mock Data Provider for Refine
-// ================================================================
-//
-// • Provides a mock data provider to test Refine frontend UI
-// • Uses MOCK_SUBJECTS as temporary data for 'subjects' resource
-// • Implements getList, getOne, create, update, deleteOne methods
-// • Other CRUD methods throw errors as placeholders (mock)
-// • Compatible with useTable, useForm, CreateButton, etc.
-// • Can be replaced with real API provider later
-// ================================================================
+        const params: Record<string, string|number> = {page, limit: pageSize};
 
-import { MOCK_SUBJECTS } from "@/constants/mock-data";
-import { BaseRecord, DataProvider, GetListParams, GetListResponse } from "@refinedev/core";
+        console.log(filters)
 
-export const dataProvider: DataProvider = {
+        filters?.forEach((filter)=>{
+          const field = 'field' in filter ? filter.field : ' ';
 
-  // -------------------------
-  // Get list of items
-  // -------------------------
-  getList: async <TData extends BaseRecord = BaseRecord>({ resource }: GetListParams): Promise<GetListResponse<TData>> => {
+          const value  = String(filter.value);
 
-    // If resource is not 'subjects', return empty array
-    if (resource !== 'subjects') {
-      return { data: [] as TData[], total: 0 };
-    }
+          if(resource == 'subjects'){
+            if(field == 'department') params.department = value;
+            if(field == 'name' || field == 'code') params.search = value;
+          }
+        })
 
-    // Return mock subjects data
-    return {
-      data: MOCK_SUBJECTS as unknown as TData[],
-      total: MOCK_SUBJECTS.length,
-    };
-  },
+        return params;
+    },
 
-  // -------------------------
-  // Get single item by ID (mock not implemented)
-  // -------------------------
-  getOne: async () => {
-    throw new Error('This function is not present in mock');
-  },
+     mapResponse: async (response) => {
+        const payload : ListResponse = await response.json();
+        // console.log("Payload: ", payload);
+        return payload.data ?? [];
+     },
 
-  // -------------------------
-  // Create new item (mock not implemented)
-  // -------------------------
-  create: async () => {
-    throw new Error('This function is not present in mock');
-  },
+     getTotalCount: async (response) =>{
+        const payload : ListResponse = await response.json();
 
-  // -------------------------
-  // Update existing item (mock not implemented)
-  // -------------------------
-  update: async () => {
-    throw new Error('This function is not present in mock');
-  },
+        return payload.pagination?.total ?? payload.data?.length ?? 0;
+     }
+  }
+}
 
-  // -------------------------
-  // Delete item (mock not implemented)
-  // -------------------------
-  deleteOne: async () => {
-    throw new Error('This function is not present in mock');
-  },
+const { dataProvider } = createDataProvider(BACKEND_BASE_URL, options);
 
-  // -------------------------
-  // API URL getter (mock returns empty string)
-  // -------------------------
-  getApiUrl: () => ''
-};
+export { dataProvider };

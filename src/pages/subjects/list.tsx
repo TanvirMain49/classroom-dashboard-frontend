@@ -5,7 +5,7 @@ import { ListView } from '@/components/refine-ui/views/list-view'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectValue, SelectTrigger } from '@/components/ui/select'
-import { DEPARTMENT_OPTION } from '@/constants'
+import { DEPARTMENT_OPTIONS } from '@/constants'
 import { Subject } from '@/types'
 import { useTable } from '@refinedev/react-table'
 import { ColumnDef } from '@tanstack/react-table'
@@ -24,7 +24,7 @@ const SubjectList = () => {
         columns: useMemo<ColumnDef<Subject>[]>(()=>[
             {
                 id:'code',
-                accessorKey:'id',
+                accessorKey:'code',
                 size: 100,
                 header:()=> <p className='column-title ml-2'>Code</p>,
                 cell:({getValue})=><Badge>{getValue<string>()}</Badge>
@@ -39,7 +39,7 @@ const SubjectList = () => {
             },
             {
                 id:'department',
-                accessorKey:'department',
+                accessorKey:'department.name',
                 size: 100,
                 header:()=> <p className='column-title'>Department</p>,
                 cell:({getValue})=><Badge variant='secondary'>{getValue<string>()}</Badge>
@@ -97,7 +97,7 @@ const SubjectList = () => {
                             <SelectItem value='all'>
                                 All Department
                             </SelectItem>
-                            {DEPARTMENT_OPTION.map(department=>(
+                            {DEPARTMENT_OPTIONS.map(department=>(
                                 <SelectItem key={department.value} value={department.value}>
                                     {department.label}
                                 </SelectItem>
