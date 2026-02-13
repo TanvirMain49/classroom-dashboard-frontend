@@ -34,7 +34,16 @@ export const authProvider: AuthProvider = {
             }
 
             // Store user data
-            localStorage.setItem("user", JSON.stringify(data.user));
+            if (!data?.user) {
+                return {
+                    success: false,
+                    error: {
+                        name: "Register failed",
+                       message: "User data missing from response.",
+                    },
+                };
+           }
+           localStorage.setItem("user", JSON.stringify(data.user));
 
             return {
                 success: true,
@@ -68,6 +77,15 @@ export const authProvider: AuthProvider = {
                 }
             }
 
+            if (!data?.user) {
+                return {
+                    success: false,
+                    error: {
+                        name: "Login failed",
+                        message: "User data missing from response.",
+                   },
+                };
+            }
             localStorage.setItem("user", JSON.stringify(data.user));
 
             return {
@@ -139,10 +157,19 @@ export const authProvider: AuthProvider = {
     },
 
     getPermissions: async () => {
-    const user = localStorage.getItem("user");
+        const getStoredUser = (): User | null => {
+            const raw = localStorage.getItem("user");
+            if (!raw) return null;
+            try {
+                return JSON.parse(raw) as User;
+            } catch {
+                localStorage.removeItem("user");
+                return null;
+            }
+        };
 
-    if (!user) return null;
-    const parsedUser: User = JSON.parse(user);
+    const parsedUser = getStoredUser();
+    if (!parsedUser) return null;
 
     return {
       role: parsedUser.role,
