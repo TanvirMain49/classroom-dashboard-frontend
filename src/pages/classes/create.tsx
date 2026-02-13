@@ -3,7 +3,7 @@ import { CreateView } from "@/components/refine-ui/views/create-view.tsx"
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { useBack } from "@refinedev/core";
+import { useBack, useList } from "@refinedev/core";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "@refinedev/react-hook-form";
 import { classSchema } from "@/lib/schema";
@@ -18,10 +18,11 @@ import {
  } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { subjects, teachers } from "@/constants";
+// import { subjects, teachers } from "@/constants";
 import { Textarea } from "@/components/ui/textarea";
 import UploadWidget from "@/components/cloudinary/upload-widget";
 import { ControllerRenderProps } from "react-hook-form";
+import { Subject, User } from "@/types";
 
 interface CloudinaryFile {
   url: string;
@@ -48,10 +49,39 @@ function ClassCreate() {
         schedules: [], 
         },
     });
-    const { handleSubmit, control, formState: { errors } } = form;
-    function onSubmit(data: z.infer<typeof classSchema>) {
-        console.log(data)
+    const {  refineCore: { onFinish }, handleSubmit, control, formState: { errors } } = form;
+    
+    const onSubmit = async (values: z.infer<typeof classSchema>) => {
+        try{
+            await onFinish(values);
+        } catch(error){
+            console.log("From error: ", error);
+        }
     } 
+
+    const { query: subjectsQuery } = useList<Subject>({
+        resource: 'subjects',
+        pagination: {
+            pageSize: 100
+        }
+    });
+
+    const { query: teacherQuery } = useList<User>({
+        resource: 'users',
+        filters: [
+            { field: 'role', operator: 'eq', value: 'teacher' }
+        ],
+        pagination: {
+            pageSize: 100
+        }
+    });
+
+    const subjects = subjectsQuery?.data?.data || [];
+    const subjectsLoading = subjectsQuery?.isLoading;
+
+    const teachers = teacherQuery?.data?.data || [];
+    const teacherLoading = teacherQuery?.isLoading;
+
     const bannerPublicId = form.watch('bannerCldPubId');
     const setBanner =  ( 
         file: CloudinaryFile | null ,
@@ -144,7 +174,7 @@ function ClassCreate() {
                                                 <Select
                                                     onValueChange={(value)=> field.onChange(Number(value))}
                                                     value={field.value !== 0 ? field.value?.toString() : undefined}
-                                                    // disabled={subjectsLoading}
+                                                    disabled={subjectsLoading}
                                                 >
                                                      <FormControl>
                                                         <SelectTrigger
@@ -179,8 +209,9 @@ function ClassCreate() {
                                             Teacher <span className="text-orange-600">*</span>
                                         </FormLabel>
                                         <Select
-                                            onValueChange={ field.onChange }
-                                            value={ field.value?.toString() }
+                                            onValueChange= { field.onChange }
+                                            value= { field.value?.toString() }
+                                            disabled= {teacherLoading}
                                         >
                                             <FormControl>
                                                 <SelectTrigger className="w-full">

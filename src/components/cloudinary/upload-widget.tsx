@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { CLOUDINARY_CLOUD_NAME, CLOUDINARY_UPLOAD_PRESET } from "@/constants";
 import { UploadWidgetValue } from "@/types";
 import { UploadCloudIcon } from "lucide-react";
@@ -6,6 +5,7 @@ import { useEffect, useRef, useState } from "react"
 
 interface UploadWidgetProps {
     value?: UploadWidgetValue | null,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onChange: (file: UploadWidgetValue | null, field?: any) => void;
     disabled?: boolean
 }
