@@ -19,6 +19,9 @@ import SubjectList from "./pages/subjects/list";
 import { dataProvider } from "./providers/data";
 import ClassList from "./pages/classes/list";
 import ClassCreate from "./pages/classes/create";
+// import Login from "./pages/login";
+// import Register from "./pages/register";
+// import { authProvider } from "./providers/auth";
 
 function App() {
   return (
@@ -29,6 +32,7 @@ function App() {
           <DevtoolsProvider>
             <Refine
               dataProvider={dataProvider}
+              // authProvider={authProvider}
               notificationProvider={useNotificationProvider()}
               routerProvider={routerProvider}
               options={{
@@ -66,8 +70,21 @@ function App() {
               ]}
             >
               <Routes>
+                {/* <Route element={
+                  <Authenticated
+                  key="public-routes"
+                  fallback={<Outlet/>}
+                  >
+                    <NavigateToResource fallbackTo="/" /> 
+                  </Authenticated>
+                }
+                >
+                  <Route path="/login" element={ <Login/> }/>
+                  <Route path="/register" element={ <Register/> }/>
+                </Route> */}
+
                 <Route element={
-                  <Layout>
+                    <Layout>
                     <Outlet/>
                   </Layout>
                 }>
