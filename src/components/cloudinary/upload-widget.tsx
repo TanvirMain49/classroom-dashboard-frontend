@@ -38,7 +38,6 @@ const UploadWidget = ({value= null, onChange, disabled = false}: UploadWidgetPro
                 clientAllowFormats: ['jpg', 'png', 'jpeg', 'webp']
             }, (error, result)=>{
                 if(!error && result.event === 'success'){
-                    console.log("initializeWidget result: ", result);
                     const payload: UploadWidgetValue = {
                         url : result.info.secure_url,
                         publicId: result.info.public_id,

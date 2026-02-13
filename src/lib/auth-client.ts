@@ -2,7 +2,7 @@ import { BACKEND_BASE_URL, USER_ROLES } from "@/constants";
 import { createAuthClient } from "better-auth/react";
 
 export const authClient = createAuthClient({
-    baseURL: new URL("auth", BACKEND_BASE_URL).toString(),
+     baseURL: new URL("auth", BACKEND_BASE_URL).toString(),
     user: {
         additionalFields:{
             role: {
