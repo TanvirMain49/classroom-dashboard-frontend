@@ -5,8 +5,8 @@ import { ListView } from '@/components/refine-ui/views/list-view'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectValue, SelectTrigger } from '@/components/ui/select'
-import { DEPARTMENT_OPTIONS } from '@/constants'
-import { Subject } from '@/types'
+import { Department, Subject } from '@/types'
+import { useList } from '@refinedev/core'
 import { useTable } from '@refinedev/react-table'
 import { ColumnDef } from '@tanstack/react-table'
 import { Search } from 'lucide-react'
@@ -15,10 +15,22 @@ import React, { useMemo, useState } from 'react'
 const SubjectList = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectDepartment, setSelectDepartment] = useState('all');
+
     const departmentFilters = selectDepartment == 'all'? [] : [{
         field: 'department', operator:'eq' as const, value:selectDepartment
     }];
-    const searchFilters = searchQuery? [{ field: 'name', operator: 'contains' as const, value:searchQuery }] : []
+    
+    const searchFilters = searchQuery? [{ field: 'name', operator: 'contains' as const, value:searchQuery }] : [];
+
+    const { query: departmentsQuery } = useList<Department>({
+        resource: "departments",
+        pagination:{
+            pageSize: 100,
+        }
+    });
+
+    const departments = departmentsQuery?.data?.data ?? [];
+    // console.log("Departments: ", departments);
 
     const subjectTable = useTable<Subject>({
         columns: useMemo<ColumnDef<Subject>[]>(()=>[
@@ -97,11 +109,14 @@ const SubjectList = () => {
                             <SelectItem value='all'>
                                 All Department
                             </SelectItem>
-                            {DEPARTMENT_OPTIONS.map(department=>(
-                                <SelectItem key={department.value} value={department.value}>
-                                    {department.label}
+                            {departments.map(department=>{
+                                if (!department.code) return null;
+                                return(
+                                <SelectItem key={department.code} value={department.code ?? ""}>
+                                    {department.name} ({ department.code })
                                 </SelectItem>
-                            ))}
+                                )
+                            })}
                         </SelectContent>
                     </Select>
 

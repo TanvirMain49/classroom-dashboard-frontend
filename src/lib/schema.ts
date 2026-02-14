@@ -11,15 +11,18 @@ export const facultySchema = z.object({
     imageCldPubId: z.string().optional()
 });
 
-export const subjectSchema = z.object({
-    name: z.string().min(3, "Subject name must be at least 3 character"),
-    code: z.string().min(5, "Subject Code must be at least 5 character"),
-    description: z
-        .string()
-        .min(5, "Subject description must be at least 5 character"),
-    department: z
-        .string()
-        .min(2, "Subject department must be at least 2 character")
+export const subjectCreateSchema = z.object({
+  departmentId: z.coerce
+    .number({
+      required_error: "Department is required",
+      invalid_type_error: "Department is required",
+    })
+    .min(1, "Department is required"),
+  name: z.string().min(3, "Subject name must be at least 3 characters"),
+  code: z.string().min(3, "Subject code must be at least 3 characters"),
+  description: z
+    .string()
+    .min(5, "Subject description must be at least 5 characters"),
 });
 
 const scheduleSchema = z.object({
