@@ -73,6 +73,7 @@ function SubjectCreate() {
   const onSubmit = async (values: SubjectFormValues) => {
     try {
       await onFinish(values);
+      console.log("From values: ", values);
     } catch (error) {
       console.error("Subject creation error: ", error);
     }
