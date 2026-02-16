@@ -90,6 +90,7 @@ export type Schedule = {
 };
 
 export type Department = {
+    code: string | null | undefined;
     id: number;
     name: string;
     description: string;
