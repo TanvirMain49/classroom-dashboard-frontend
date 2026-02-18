@@ -19,6 +19,7 @@ import SubjectList from "./pages/subjects/list";
 import { dataProvider } from "./providers/data";
 import ClassList from "./pages/classes/list";
 import ClassCreate from "./pages/classes/create";
+import ClassesShow from "./pages/classes/show";
 // import Login from "./pages/login";
 // import Register from "./pages/register";
 // import { authProvider } from "./providers/auth";
@@ -62,6 +63,7 @@ function App() {
                   name:'classes',
                   list:'/classes',
                   create:'/classes/create',
+                  show: '/classes/show/:id',
                   meta:{
                     label:'Class',
                     icon: <GraduationCap/>
@@ -96,6 +98,7 @@ function App() {
                     <Route path="classes">
                       <Route index element={<ClassList/>} />
                       <Route path="create" element={<ClassCreate/>} />
+                      <Route path="show/:id" element={<ClassesShow/>} />
                     </Route>
                 </Route>
               </Routes>
