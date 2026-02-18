@@ -20,7 +20,9 @@ import z from "zod";
 
 const departmentSchema = z.object({
   code: z.string().min(2, "Department code must be at least 2 character."),
-  name: z.string().min(2, "Department name must be at least 2 character."),
+  name: z.string()
+    .min(2, "Department name must be at least 2 character.")
+    .includes("DEPT-", { message: "Department name must include 'DEPT-'" }),
   description: z
     .string()
     .min(5, "Department description must be at least 5 character."),
@@ -104,7 +106,7 @@ function DepartmentCreate() {
                         <span className="text-orange-600">*</span>
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder="Computer Science" {...field} />
+                        <Input placeholder="DEPT-CSE" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
