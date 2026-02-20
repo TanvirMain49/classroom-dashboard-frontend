@@ -55,6 +55,10 @@ const options: CreateDataProviderOptions = {
             params.role = value;
           }
 
+          if(resource === 'faculties'){
+            if(field === 'search') params.search = value;
+          }
+
         })
 
         return params;
@@ -63,7 +67,7 @@ const options: CreateDataProviderOptions = {
      mapResponse: async (response) => {
         if(!response.ok) throw await buildHttpError(response);
         const payload : ListResponse = await response.json();
-        // console.log("Payload: ", payload);
+      //   console.log("Payload: ", payload);
         return payload.data ?? [];
      },
 
@@ -84,7 +88,10 @@ const options: CreateDataProviderOptions = {
    }
   },
   getOne: {
-   getEndpoint: ({ resource, id }) => `${resource}/${id}`,
+   getEndpoint: ({ resource, id }) => {
+      console.log("Resource, id: ", resource,", ", id);
+      return `${resource}/${id}`
+   },
    mapResponse: async (response) =>{
       if(!response.ok) throw await buildHttpError(response);
       const json : GetOneResponse = await response.json();

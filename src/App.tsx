@@ -12,7 +12,7 @@ import { Toaster } from "./components/refine-ui/notification/toaster";
 import { useNotificationProvider } from "./components/refine-ui/notification/use-notification-provider";
 import { ThemeProvider } from "./components/refine-ui/theme/theme-provider";
 import Dashboard from "./pages/dashboard";
-import { BookOpen, Building2, GraduationCap, Home } from "lucide-react";
+import { BookOpen, Building2, GraduationCap, Home, Users2 } from "lucide-react";
 import { Layout } from "./components/refine-ui/layout/layout";
 import SubjectCreate from "./pages/subjects/create";
 import SubjectList from "./pages/subjects/list";
@@ -23,6 +23,8 @@ import ClassesShow from "./pages/classes/show";
 import DepartmentList from "./pages/departments/list";
 import DepartmentCreate from "./pages/departments/create";
 import DepartmentShow from "./pages/departments/show";
+import FacultiesList from "./pages/faculties/list";
+import FacultyShow from "./pages/faculties/show";
 // import Login from "./pages/login";
 // import Register from "./pages/register";
 // import { authProvider } from "./providers/auth";
@@ -73,6 +75,15 @@ function App() {
                   }
                 },
                 {
+                  name: 'users',
+                  list: '/faculties',
+                  show: '/faculties/show/:id',
+                  meta: {
+                    label: 'Faculties',
+                    icon: <Users2 />
+                  }
+                },
+                {
                   name:'classes',
                   list:'/classes',
                   create:'/classes/create',
@@ -120,6 +131,11 @@ function App() {
                       <Route index element={ <DepartmentList /> } />
                       <Route path="create" element={ <DepartmentCreate /> } />
                       <Route path="show/:id" element={ <DepartmentShow /> } />
+                    </Route>
+
+                    <Route path="faculties">
+                      <Route index element={ <FacultiesList/> } />
+                      <Route path="show/:id" element={ <FacultyShow/> } />
                     </Route>
 
                 </Route>
