@@ -19,13 +19,13 @@ import { useForm } from "@refinedev/react-hook-form";
 import z from "zod";
 
 const departmentSchema = z.object({
-  code: z.string().min(2, "Department code must be at least 2 character."),
+  code: z.string().min(2, "Department code must be at least 2 characters."),
   name: z.string()
-    .min(2, "Department name must be at least 2 character.")
+    .min(2, "Department name must be at least 2 characters.")
     .includes("DEPT-", { message: "Department name must include 'DEPT-'" }),
   description: z
     .string()
-    .min(5, "Department description must be at least 5 character."),
+    .min(5, "Department description must be at least 5 characters."),
 });
 type DepartmentFormValues = z.infer<typeof departmentSchema>;
 
