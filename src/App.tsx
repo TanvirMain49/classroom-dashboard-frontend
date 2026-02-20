@@ -12,7 +12,7 @@ import { Toaster } from "./components/refine-ui/notification/toaster";
 import { useNotificationProvider } from "./components/refine-ui/notification/use-notification-provider";
 import { ThemeProvider } from "./components/refine-ui/theme/theme-provider";
 import Dashboard from "./pages/dashboard";
-import { BookOpen, GraduationCap, Home } from "lucide-react";
+import { BookOpen, Building2, GraduationCap, Home } from "lucide-react";
 import { Layout } from "./components/refine-ui/layout/layout";
 import SubjectCreate from "./pages/subjects/create";
 import SubjectList from "./pages/subjects/list";
@@ -20,6 +20,9 @@ import { dataProvider } from "./providers/data";
 import ClassList from "./pages/classes/list";
 import ClassCreate from "./pages/classes/create";
 import ClassesShow from "./pages/classes/show";
+import DepartmentList from "./pages/departments/list";
+import DepartmentCreate from "./pages/departments/create";
+import DepartmentShow from "./pages/departments/show";
 // import Login from "./pages/login";
 // import Register from "./pages/register";
 // import { authProvider } from "./providers/auth";
@@ -60,6 +63,16 @@ function App() {
                   }
                 },
                 {
+                  name: 'departments',
+                  list: '/departments',
+                  create: '/departments/create',
+                  show: '/departments/show/:id',
+                  meta: {
+                    label: 'Department',
+                    icon: <Building2 />
+                  }
+                },
+                {
                   name:'classes',
                   list:'/classes',
                   create:'/classes/create',
@@ -91,15 +104,24 @@ function App() {
                   </Layout>
                 }>
                     <Route path="/" element={ <Dashboard/> } />
+
                     <Route path="subjects">
                       <Route index element={<SubjectList/>} />
                       <Route path="create" element={<SubjectCreate/>}/>
                     </Route>
+
                     <Route path="classes">
                       <Route index element={<ClassList/>} />
                       <Route path="create" element={<ClassCreate/>} />
                       <Route path="show/:id" element={<ClassesShow/>} />
                     </Route>
+
+                    <Route path="departments">
+                      <Route index element={ <DepartmentList /> } />
+                      <Route path="create" element={ <DepartmentCreate /> } />
+                      <Route path="show/:id" element={ <DepartmentShow /> } />
+                    </Route>
+
                 </Route>
               </Routes>
               <Toaster />
