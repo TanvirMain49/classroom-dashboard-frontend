@@ -70,7 +70,6 @@ const DepartmentShow = () => {
   });
 
   const details = query.data?.data;
-  console.log("Details: ", details);
 
   const subjectColumns = useMemo<ColumnDef<DepartmentSubject>[]>(
     () => [
