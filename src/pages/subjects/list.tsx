@@ -1,4 +1,4 @@
-import { CreateButton } from '@/components/refine-ui/buttons/create'
+import { ProtectedCreateButton } from '@/components/refine-ui/buttons/protected-create'
 import { ShowButton } from '@/components/refine-ui/buttons/show'
 import { DataTable } from '@/components/refine-ui/data-table/data-table'
 import { Breadcrumb } from '@/components/refine-ui/layout/breadcrumb'
@@ -136,7 +136,7 @@ const SubjectList = () => {
                         </SelectContent>
                     </Select>
 
-                    <CreateButton/>
+                    <ProtectedCreateButton resource="subjects" />
                 </div>
             </div>
       </div>

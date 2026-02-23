@@ -1,9 +1,10 @@
-import { Refine} from "@refinedev/core";
+import { Authenticated, Refine } from "@refinedev/core";
 import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 
 import routerProvider, {
   DocumentTitleHandler,
+  NavigateToResource,
   UnsavedChangesNotifier,
 } from "@refinedev/react-router";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router";
@@ -26,9 +27,10 @@ import DepartmentShow from "./pages/departments/show";
 import FacultiesList from "./pages/faculties/list";
 import FacultyShow from "./pages/faculties/show";
 import SubjectShow from "./pages/subjects/show";
-// import Login from "./pages/login";
-// import Register from "./pages/register";
-// import { authProvider } from "./providers/auth";
+import Login from "./pages/login";
+import Register from "./pages/register";
+import { authProvider } from "./providers/auth";
+import { ProtectedCreateRoute } from "./components/layout/protected-create-route";
 
 function App() {
   return (
@@ -39,108 +41,129 @@ function App() {
           <DevtoolsProvider>
             <Refine
               dataProvider={dataProvider}
-              // authProvider={authProvider}
+              authProvider={authProvider}
               notificationProvider={useNotificationProvider()}
               routerProvider={routerProvider}
               options={{
                 syncWithLocation: true,
                 warnWhenUnsavedChanges: true,
                 projectId: "hs0f2S-XF3poq-EQkJK4",
+                title: { text: "My Dashboard" },
               }}
               resources={[
                 {
-                  name:'dashboard',
-                  list:'/',
-                  meta:{
-                    label:'Home',
-                    icon: <Home/>
-                  }
-                },
-                {
-                  name:'subjects',
-                  list:'/subjects',
-                  create:'/subjects/create',
-                  show: '/subjects/show/:id',
-                  meta:{
-                    label:'Subject',
-                    icon: <BookOpen/>
-                  }
-                },
-                {
-                  name: 'departments',
-                  list: '/departments',
-                  create: '/departments/create',
-                  show: '/departments/show/:id',
+                  name: "dashboard",
+                  list: "/",
                   meta: {
-                    label: 'Department',
-                    icon: <Building2 />
-                  }
+                    label: "Home",
+                    icon: <Home />,
+                  },
                 },
                 {
-                  name: 'users',
-                  list: '/faculties',
-                  show: '/faculties/show/:id',
+                  name: "subjects",
+                  list: "/subjects",
+                  create: "/subjects/create",
+                  show: "/subjects/show/:id",
                   meta: {
-                    label: 'Faculties',
-                    icon: <Users2 />
-                  }
+                    label: "Subject",
+                    icon: <BookOpen />,
+                  },
                 },
                 {
-                  name:'classes',
-                  list:'/classes',
-                  create:'/classes/create',
-                  show: '/classes/show/:id',
-                  meta:{
-                    label:'Class',
-                    icon: <GraduationCap/>
-                  }
-                }
+                  name: "departments",
+                  list: "/departments",
+                  create: "/departments/create",
+                  show: "/departments/show/:id",
+                  meta: {
+                    label: "Department",
+                    icon: <Building2 />,
+                  },
+                },
+                {
+                  name: "users",
+                  list: "/faculties",
+                  show: "/faculties/show/:id",
+                  meta: {
+                    label: "Faculties",
+                    icon: <Users2 />,
+                  },
+                },
+                {
+                  name: "classes",
+                  list: "/classes",
+                  create: "/classes/create",
+                  show: "/classes/show/:id",
+                  meta: {
+                    label: "Class",
+                    icon: <GraduationCap />,
+                  },
+                },
               ]}
             >
               <Routes>
-                {/* <Route element={
-                  <Authenticated
-                  key="public-routes"
-                  fallback={<Outlet/>}
-                  >
-                    <NavigateToResource fallbackTo="/" /> 
-                  </Authenticated>
-                }
+                <Route
+                  element={
+                    <Authenticated key="public-routes" fallback={<Outlet />}>
+                      <NavigateToResource fallbackTo="/" />
+                    </Authenticated>
+                  }
                 >
-                  <Route path="/login" element={ <Login/> }/>
-                  <Route path="/register" element={ <Register/> }/>
-                </Route> */}
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
+                </Route>
 
-                <Route element={
+                <Route
+                  element={
                     <Layout>
-                    <Outlet/>
-                  </Layout>
-                }>
-                    <Route path="/" element={ <Dashboard/> } />
+                      <Outlet />
+                    </Layout>
+                  }
+                >
+                  <Route path="/" element={<Dashboard />} />
 
-                    <Route path="subjects">
-                      <Route index element={<SubjectList/>} />
-                      <Route path="create" element={<SubjectCreate/>}/>
-                      <Route path="show/:id" element={<SubjectShow/>}/>
-                    </Route>
+                  <Route path="subjects">
+                    <Route index element={<SubjectList />} />
+                    <Route
+                      path="create"
+                      element={
+                        <ProtectedCreateRoute resource="subjects">
+                          <SubjectCreate />
+                        </ProtectedCreateRoute>
+                      }
+                    />
+                    <Route path="show/:id" element={<SubjectShow />} />
+                  </Route>
 
-                    <Route path="classes">
-                      <Route index element={<ClassList/>} />
-                      <Route path="create" element={<ClassCreate/>} />
-                      <Route path="show/:id" element={<ClassesShow/>} />
-                    </Route>
+                  <Route path="classes">
+                    <Route index element={<ClassList />} />
+                    <Route
+                      path="create"
+                      element={
+                        <ProtectedCreateRoute resource="classes">
+                          <ClassCreate />
+                        </ProtectedCreateRoute>
+                      }
+                    />
+                    <Route path="show/:id" element={<ClassesShow />} />
+                  </Route>
 
-                    <Route path="departments">
-                      <Route index element={ <DepartmentList /> } />
-                      <Route path="create" element={ <DepartmentCreate /> } />
-                      <Route path="show/:id" element={ <DepartmentShow /> } />
-                    </Route>
+                  <Route path="departments">
+                    <Route index element={<DepartmentList />} />
+                    <Route
+                      path="create"
+                      element={
+                        <ProtectedCreateRoute resource="departments">
+                          <DepartmentCreate />
+                        </ProtectedCreateRoute>
+                      }
+                    />
+                    <Route path="show/:id" element={<DepartmentShow />} />
+                  </Route>
 
-                    <Route path="faculties">
-                      <Route index element={ <FacultiesList/> } />
-                      <Route path="show/:id" element={ <FacultyShow/> } />
-                    </Route>
-
+                  <Route path="faculties">
+                    <Route index element={<FacultiesList />} />
+                    <Route path="show/:id" element={<FacultyShow />} />
+                  </Route>
                 </Route>
               </Routes>
               <Toaster />

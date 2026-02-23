@@ -1,5 +1,5 @@
-import { UserAvatar } from "@/components/refine-ui/layout/user-avatar";
 import { ThemeToggle } from "@/components/refine-ui/theme/theme-toggle";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,13 +7,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
+import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import {
   useActiveAuthProvider,
   useLogout,
   useRefineOptions,
 } from "@refinedev/core";
-import { LogOutIcon } from "lucide-react";
+import { LogOutIcon, Mail, ShieldCheck, UserCircle2 } from "lucide-react";
+import type { User } from "@/types/user";
 
 export const Header = () => {
   const { isMobile } = useSidebar();
@@ -37,7 +39,7 @@ function DesktopHeader() {
         "bg-sidebar",
         "pr-3",
         "justify-end",
-        "z-40"
+        "z-40",
       )}
     >
       <ThemeToggle />
@@ -66,7 +68,7 @@ function MobileHeader() {
         "bg-sidebar",
         "pr-3",
         "justify-between",
-        "z-40"
+        "z-40",
       )}
     >
       <SidebarTrigger
@@ -92,7 +94,7 @@ function MobileHeader() {
           {
             "pl-3": !open,
             "pl-5": open,
-          }
+          },
         )}
       >
         <div>{title.icon}</div>
@@ -105,7 +107,7 @@ function MobileHeader() {
             {
               "opacity-0": !open,
               "opacity-100": open,
-            }
+            },
           )}
         >
           {title.text}
@@ -117,8 +119,19 @@ function MobileHeader() {
   );
 }
 
+const getInitials = (name = "") => {
+  const parts = name.trim().split(" ");
+  if (parts.length === 0) return "";
+  if (parts.length === 1) return parts[0][0]?.toUpperCase() ?? "";
+  return `${parts[0][0] ?? ""}${parts[parts.length - 1][0] ?? ""}`.toUpperCase();
+};
+
 const UserDropdown = () => {
   const { mutate: logout, isPending: isLoggingOut } = useLogout();
+
+  const { data: session } = authClient.useSession();
+  const user: User | undefined = session?.user;
+  // console.log('user: ',user);
 
   const authProvider = useActiveAuthProvider();
 
@@ -129,9 +142,41 @@ const UserDropdown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <UserAvatar />
+        <Avatar>
+          {user?.image && <AvatarImage src={user?.image} alt={user?.name} />}
+          <AvatarFallback>{getInitials(user?.name)}</AvatarFallback>
+        </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
+        <div className="flex items-center gap-3 p-3 border-b mb-1">
+          <div className="flex flex-col gap-1">
+            {/* Name with Icon */}
+            <div className="flex items-center gap-2">
+              <UserCircle2 size={20} />
+              <span className="text-xs font-bold text-foreground leading-none">
+                {user?.name}
+              </span>
+            </div>
+
+            {/* Email with Icon */}
+            <div className="flex items-center gap-2">
+              <Mail size={20} />
+              <span className="text-xs text-foreground truncate w-32 leading-none">
+                {user?.email}
+              </span>
+            </div>
+
+            {/* Role with Icon */}
+            {user?.role && (
+              <div className="flex items-center gap-2">
+                <ShieldCheck size={20} />
+                <span className="text-xs font-medium text-foreground capitalize leading-none">
+                  {user.role}
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
         <DropdownMenuItem
           onClick={() => {
             logout();

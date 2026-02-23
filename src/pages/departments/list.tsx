@@ -1,4 +1,4 @@
-import { CreateButton } from "@/components/refine-ui/buttons/create";
+import { ProtectedCreateButton } from "@/components/refine-ui/buttons/protected-create";
 import { ShowButton } from "@/components/refine-ui/buttons/show";
 import { DataTable } from "@/components/refine-ui/data-table/data-table";
 import { Breadcrumb } from "@/components/refine-ui/layout/breadcrumb";
@@ -140,7 +140,7 @@ const DepartmentList = () => {
               value={searchQuery}
             />
           </div>
-          <CreateButton resource="departments" />
+          <ProtectedCreateButton resource="departments" />
         </div>
       </div>
       <DataTable table={departmentsTable} />
