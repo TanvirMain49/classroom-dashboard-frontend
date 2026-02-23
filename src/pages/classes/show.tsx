@@ -13,7 +13,7 @@ import { useShow } from "@refinedev/core"
 import { useTable } from "@refinedev/react-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { useMemo } from "react";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
 
 type ClassUser = {
   id: string;
@@ -26,6 +26,7 @@ type ClassUser = {
 const ClassesShow = () => {
   const { id } = useParams();
   const classId = id ?? "";
+  const navigate = useNavigate();
 
   const { query } = useShow<ClassDetails>({
     resource: "classes",
@@ -229,7 +230,11 @@ const ClassesShow = () => {
           </ol>
         </div>
 
-        <Button size="lg" className="w-full">
+        <Button 
+          size="lg" 
+          className="w-full"
+          onClick={() => navigate("/enrollments/join")}
+        >
           Join Class
         </Button>
       </Card>

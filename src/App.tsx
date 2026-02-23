@@ -13,7 +13,7 @@ import { Toaster } from "./components/refine-ui/notification/toaster";
 import { useNotificationProvider } from "./components/refine-ui/notification/use-notification-provider";
 import { ThemeProvider } from "./components/refine-ui/theme/theme-provider";
 import Dashboard from "./pages/dashboard";
-import { BookOpen, Building2, GraduationCap, Home, Users2 } from "lucide-react";
+import { BookOpen, Building2, ClipboardCheck, GraduationCap, Home, Users2 } from "lucide-react";
 import { Layout } from "./components/refine-ui/layout/layout";
 import SubjectCreate from "./pages/subjects/create";
 import SubjectList from "./pages/subjects/list";
@@ -31,6 +31,9 @@ import Login from "./pages/login";
 import Register from "./pages/register";
 import { authProvider } from "./providers/auth";
 import { ProtectedCreateRoute } from "./components/layout/protected-create-route";
+import EnrollmentConfirm from "./pages/enrollments/confirm";
+import EnrollmentsCreate from "./pages/enrollments/create";
+import EnrollmentsJoin from "./pages/enrollments/join";
 
 function App() {
   return (
@@ -86,6 +89,15 @@ function App() {
                   meta: {
                     label: "Faculties",
                     icon: <Users2 />,
+                  },
+                },
+                {
+                  name: "enrollments",
+                  list: "/enrollments/create",
+                  create: "/enrollments/create",
+                  meta: {
+                    label: "Enrollments",
+                    icon: <ClipboardCheck />,
                   },
                 },
                 {
@@ -158,6 +170,11 @@ function App() {
                       }
                     />
                     <Route path="show/:id" element={<DepartmentShow />} />
+                  </Route>
+                  <Route path="enrollments">
+                    <Route path="create" element={<EnrollmentsCreate />} />
+                    <Route path="join" element={<EnrollmentsJoin />} />
+                    <Route path="confirm" element={<EnrollmentConfirm />} />
                   </Route>
 
                   <Route path="faculties">
