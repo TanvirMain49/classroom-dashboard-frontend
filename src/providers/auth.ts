@@ -66,7 +66,7 @@ export const authProvider: AuthProvider = {
       if (providerName === "google") {
         await authClient.signIn.social({
           provider: "google",
-          callbackURL: "http://localhost:5173/",
+          callbackURL: import.meta.env.VITE_FRONTEND_BASE_URL,
         });
         return {
           success: true,
@@ -75,7 +75,7 @@ export const authProvider: AuthProvider = {
       if (providerName === "github") {
         await authClient.signIn.social({
           provider: "github",
-          callbackURL: "http://localhost:5173/",
+          callbackURL: import.meta.env.VITE_FRONTEND_BASE_URL,
         });
         return {
           success: true,
