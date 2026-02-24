@@ -14,6 +14,7 @@ import { useTable } from "@refinedev/react-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { useMemo } from "react";
 import { useParams, useNavigate } from "react-router";
+import { usePermission } from "@/hooks/usePermission";
 
 type ClassUser = {
   id: string;
@@ -27,6 +28,7 @@ const ClassesShow = () => {
   const { id } = useParams();
   const classId = id ?? "";
   const navigate = useNavigate();
+  const { isStudent } = usePermission();
 
   const { query } = useShow<ClassDetails>({
     resource: "classes",
@@ -220,23 +222,27 @@ const ClassesShow = () => {
         <Separator />
 
         {/* Join Class Section */}
-        <div className="join">
-          <h2>🎓 Join Class</h2>
+        {isStudent && (
+          <>
+            <div className="join">
+              <h2>🎓 Join Class</h2>
 
-          <ol>
-            <li>Ask your teacher for the invite code.</li>
-            <li>Click on &quot;Join Class&quot; button.</li>
-            <li>Paste the code and click &quot;Join&quot;</li>
-          </ol>
-        </div>
+              <ol>
+                <li>Ask your teacher for the invite code.</li>
+                <li>Click on &quot;Join Class&quot; button.</li>
+                <li>Paste the code and click &quot;Join&quot;</li>
+              </ol>
+            </div>
 
-        <Button 
-          size="lg" 
-          className="w-full"
-          onClick={() => navigate("/enrollments/join")}
-        >
-          Join Class
-        </Button>
+            <Button 
+              size="lg" 
+              className="w-full"
+              onClick={() => navigate("/enrollments/join")}
+            >
+              Join Class
+            </Button>
+          </>
+        )}
       </Card>
 
       <Card className="hover:shadow-md transition-shadow">

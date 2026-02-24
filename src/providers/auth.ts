@@ -175,39 +175,30 @@ export const authProvider: AuthProvider = {
   },
 
   getPermissions: async () => {
-    const getStoredUser = (): User | null => {
-      const raw = localStorage.getItem("user");
-      if (!raw) return null;
-      try {
-        return JSON.parse(raw) as User;
-      } catch {
-        localStorage.removeItem("user");
-        return null;
-      }
-    };
+    const { data: session } = await authClient.getSession();
 
-    const parsedUser = getStoredUser();
-    if (!parsedUser) return null;
-
-    return {
-      role: parsedUser.role,
-    };
+    if (session?.user) {
+      const parsedUser = (session.user as unknown ) as User;
+      return parsedUser?.role;
+    }
+    return null;
   },
 
   getIdentity: async () => {
-    const user = localStorage.getItem("user");
+    const { data: session } = await authClient.getSession();
+    console.log(session?.user);
 
-    if (!user) return null;
-    const parsedUser: User = JSON.parse(user);
-
-    return {
-      id: parsedUser.id,
-      name: parsedUser.name,
-      email: parsedUser.email,
-      image: parsedUser.image,
-      role: parsedUser.role,
-      imageCldPubId: parsedUser.imageCldPubId,
-    };
+    if (session?.user) {
+      const parsedUser = (session.user as unknown ) as User;
+      return {
+        id: parsedUser.id,
+        name: parsedUser.name,
+        email: parsedUser.email,
+        image: parsedUser.image,
+        role: parsedUser.role,
+        imageCldPubId: parsedUser.imageCldPubId,
+      };
+    }
+    return null;
   },
-
 };

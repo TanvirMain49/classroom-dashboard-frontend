@@ -32,7 +32,7 @@ const EnrollmentsJoin = () => {
     mutateAsync: joinEnrollment,
     mutation: { isPending },
   } = useCreate();
-  const { data: currentUser } = useGetIdentity<User>();
+  const { data: currentUser, isLoading } = useGetIdentity<User>();
 
   const form = useForm<JoinFormValues>({
     resolver: zodResolver(joinSchema),
@@ -45,6 +45,7 @@ const EnrollmentsJoin = () => {
 
   const onSubmit = async (values: JoinFormValues) => {
     if (!currentUser?.id) return;
+    console.log(values);
 
     const response = await joinEnrollment({
       resource: "enrollments/join",
@@ -111,6 +112,7 @@ const EnrollmentsJoin = () => {
                   <FormControl>
                     <Input
                       value={currentUser?.email ?? "Not signed in"}
+                      disabled={isLoading}
                       readOnly
                     />
                   </FormControl>
